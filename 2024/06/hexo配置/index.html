@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="git1scoop install main&#x2F;git  配置全局git用户 12git config --global user.email &quot;221220074@smail.nju.edu.cn&quot;git config --global user.name &quot;xkxkzzZ&quot;    github ssh通过 SSH 连接到 GitHub - GitHub 文">
+    <meta name="description" content="git 1scoop install main&#x2F;git 配置全局git用户 12git config --global user.email &quot;221220074@smail.nju.edu.cn&quot;git config --global user.name &quot;xkxkzzZ&quot; github ssh 通过 SSH 连接到 GitHub - GitH">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hexo配置">
 <meta property="og:url" content="http://example.com/2024/06/hexo%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="xk is sleeping">
-<meta property="og:description" content="git1scoop install main&#x2F;git  配置全局git用户 12git config --global user.email &quot;221220074@smail.nju.edu.cn&quot;git config --global user.name &quot;xkxkzzZ&quot;    github ssh通过 SSH 连接到 GitHub - GitHub 文">
+<meta property="og:description" content="git 1scoop install main&#x2F;git 配置全局git用户 12git config --global user.email &quot;221220074@smail.nju.edu.cn&quot;git config --global user.name &quot;xkxkzzZ&quot; github ssh 通过 SSH 连接到 GitHub - GitH">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-06-09T11:20:39.826Z">
 <meta property="article:modified_time" content="2024-06-09T10:02:33.134Z">
@@ -54,6 +54,16 @@
     
     
 	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 	
 <meta name="generator" content="Hexo 7.1.1"></head>
 
@@ -154,54 +164,46 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h4 id="git"><a href="#git" class="headerlink" title="git"></a>git</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop install main/git</span><br></pre></td></tr></table></figure>
-
+    <h4 id="git">git</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop install main/git</span><br></pre></td></tr></table></figure>
 <p>配置全局git用户</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.email &quot;221220074@smail.nju.edu.cn&quot;</span><br><span class="line">git config --global user.name &quot;xkxkzzZ&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="github-ssh"><a href="#github-ssh" class="headerlink" title="github ssh"></a>github ssh</h4><p><a target="_blank" rel="noopener" href="https://docs.github.com/zh/authentication/connecting-to-github-with-ssh">通过 SSH 连接到 GitHub - GitHub 文档</a></p>
+<h4 id="github-ssh">github ssh</h4>
+<p><a
+target="_blank" rel="noopener" href="https://docs.github.com/zh/authentication/connecting-to-github-with-ssh">通过
+SSH 连接到 GitHub - GitHub 文档</a></p>
 <p>创建并查看ssh密钥</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C &quot;221220074@smail.nju.edu.cn&quot;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\35458\.ssh&gt; cat .\id_ed25519.pub</span><br><span class="line">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGkHX/bpSA/M8lYjrsnKHVoo9fsX37s3UgX/fIwImUN1 221220074@smail.nju.edu.cn</span><br></pre></td></tr></table></figure>
-
 <p>复制添加到github上（ssh和设备绑定）</p>
-<p>settings  -&gt;  SSH and GPG keys  -&gt; New SSH key</p>
-<h4 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h4><p>（已安装nodejs、git）</p>
+<p>settings -&gt; SSH and GPG keys -&gt; New SSH key</p>
+<h4 id="安装hexo">安装hexo</h4>
+<p>（已安装nodejs、git）</p>
 <p>安装hexo</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
 <p>创建基础网页</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS E:\githubPage&gt; hexo init</span><br></pre></td></tr></table></figure>
-
-<p>启动本地服务器，这时已经可以在  <code>http://localhost:4000/</code> 看到基础网页了</p>
+<p>启动本地服务器，这时已经可以在 <code>http://localhost:4000/</code>
+看到基础网页了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="部署到github上"><a href="#部署到github上" class="headerlink" title="部署到github上"></a>部署到github上</h4><p>在github里新建一个名叫 xkxkzzZ.github.io 的 repository</p>
+<h4 id="部署到github上">部署到github上</h4>
+<p>在github里新建一个名叫 xkxkzzZ.github.io 的 repository</p>
 <p>全局配置文件 <code>_config.yml</code> 的最下方</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:xkxkzzZ/xkxkzzZ.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
-
-<p>下载 hexo-deployer-git </p>
+<p>下载 hexo-deployer-git</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
 <p>hexo deploy 一键部署</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS E:\githubPage&gt; hexo deploy</span><br></pre></td></tr></table></figure>
-
 <p>这时可以看到github仓库里有文件了</p>
-<p>大家都可以访问 <code>https://xkxkzzz.github.io/</code> 链接看到网页</p>
-<h4 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h4><p>清除缓存</p>
+<p>大家都可以访问 <code>https://xkxkzzz.github.io/</code>
+链接看到网页</p>
+<h4 id="常用指令">常用指令</h4>
+<p>清除缓存</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo cl</span><br></pre></td></tr></table></figure>
-
 <p>启动服务器</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
 <p>部署到云端</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
 
   </div>
 </article>
