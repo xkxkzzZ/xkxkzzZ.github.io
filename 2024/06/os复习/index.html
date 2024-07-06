@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="面向往年卷的复习qwq  进程进程树 &amp; 运行结果eg112345fd &#x3D; open(&quot;data.txt, 0_RDONLY&quot;)  &#x2F;&#x2F;data.txt:&quot;abcdefghijklmnopqrst&quot;fork();fork();read(fd, &amp;buffer, 2);printf(&quot;%d, %s\n&quot;, getpid()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统os复习">
+<meta property="og:url" content="http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="xk is sleeping">
+<meta property="og:description" content="面向往年卷的复习qwq  进程进程树 &amp; 运行结果eg112345fd &#x3D; open(&quot;data.txt, 0_RDONLY&quot;)  &#x2F;&#x2F;data.txt:&quot;abcdefghijklmnopqrst&quot;fork();fork();read(fd, &amp;buffer, 2);printf(&quot;%d, %s\n&quot;, getpid()">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240627234816668.png">
+<meta property="og:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240706172320072.png">
+<meta property="og:image" content="c:\Users\35458\AppData\Roaming\Typora\typora-user-images\image-20240628221621849.png">
+<meta property="og:image" content="c:\Users\35458\AppData\Roaming\Typora\typora-user-images\image-20240628235419880.png">
+<meta property="article:published_time" content="2024-06-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-06T09:30:13.213Z">
+<meta property="article:author" content="xk">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240627234816668.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>操作系统os复习</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/projects/">Projects</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/06/%E8%AE%A1%E7%BD%91%E5%A4%8D%E4%B9%A0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/06/hexo%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%B8%B2%E6%9F%93/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&text=操作系统os复习"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&is_video=false&description=操作系统os复习"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=操作系统os复习&body=Check out this article: http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&name=操作系统os复习&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&t=操作系统os复习"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">进程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%A0%91-%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">进程树 &amp; 运行结果</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#eg1"><span class="toc-number">1.0.0.1.1.</span> <span class="toc-text">eg1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg2"><span class="toc-number">1.0.0.1.2.</span> <span class="toc-text">eg2</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg3"><span class="toc-number">1.0.0.1.3.</span> <span class="toc-text">eg3</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg4"><span class="toc-number">1.0.0.1.4.</span> <span class="toc-text">eg4</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">管道通信机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#eg1-1"><span class="toc-number">1.0.0.2.1.</span> <span class="toc-text">eg1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg2-1"><span class="toc-number">1.0.0.2.2.</span> <span class="toc-text">eg2</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.0.2.3.</span> <span class="toc-text">其他进程间通信机制</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#API%E5%87%BD%E6%95%B0%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">API函数与系统调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%99%E8%BF%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">叙述过程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E5%8F%99%E8%BF%B0open%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%88%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E6%98%AF-user-os%EF%BC%89"><span class="toc-number">1.0.0.4.1.</span> <span class="toc-text">简要叙述open系统调用的工作过程（当前工作目录是&#x2F;user&#x2F;os）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0-fork-%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.0.4.2.</span> <span class="toc-text">简要描述 fork 的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0%E7%AE%A1%E9%81%93%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.0.4.3.</span> <span class="toc-text">简要描述管道通信机制的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.0.4.4.</span> <span class="toc-text">简要描述输入输出重定向机制的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0sleep%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.0.4.5.</span> <span class="toc-text">简述sleep工作过程</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A"><span class="toc-number">2.</span> <span class="toc-text">作业</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">作业调度</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E5%91%A8%E8%BD%AC%E6%97%B6%E9%97%B4-Avg-%E7%BB%93%E6%9D%9F%E6%97%B6%E9%97%B4-%E5%B0%B1%E7%BB%AA%E6%97%B6%E9%97%B4"><span class="toc-number">2.0.0.1.1.</span> <span class="toc-text">平均周转时间 &#x3D; Avg {结束时间 - 就绪时间}</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E5%B8%A6%E6%9D%83%E5%91%A8%E8%BD%AC%E6%97%B6%E9%97%B4-Avg-%EF%BC%88%E7%BB%93%E6%9D%9F%E6%97%B6%E9%97%B4-%E5%B0%B1%E7%BB%AA%E6%97%B6%E9%97%B4%EF%BC%89-%E4%BC%B0%E8%AE%A1%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4"><span class="toc-number">2.0.0.1.2.</span> <span class="toc-text">平均带权周转时间 &#x3D; Avg {  （结束时间 - 就绪时间） &#x2F; 估计运行时间 }</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">进程调度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-number">2.0.0.3.</span> <span class="toc-text">存储管理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%88%86%E5%8C%BA%E4%B8%BB%E5%AD%98%E5%88%86%E9%85%8D%E7%AE%97%E6%B3%95"><span class="toc-number">2.0.0.3.1.</span> <span class="toc-text">可变分区主存分配算法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%96%E5%9B%B4%E8%AE%BE%E5%A4%87"><span class="toc-number">2.0.0.4.</span> <span class="toc-text">外围设备</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B5%84%E6%BA%90"><span class="toc-number">3.</span> <span class="toc-text">资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E9%A1%B5"><span class="toc-number">4.</span> <span class="toc-text">分页</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97"><span class="toc-number">4.0.0.1.</span> <span class="toc-text">计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91-%E7%90%86%E8%AE%BA-%E6%9C%80%E5%A4%A7%E9%A1%B5%E6%95%B0-%E6%80%BB%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B42-32-B-%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F-%EF%BC%88%E9%A1%B5%E8%A1%A8%E7%9B%B8%E5%85%B3%EF%BC%89"><span class="toc-number">4.0.0.1.1.</span> <span class="toc-text">逻辑(理论)最大页数 &#x3D; 总地址空间2^32 B &#x2F; 页面大小   （页表相关）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%A9%E7%90%86-%E5%AE%9E%E9%99%85-%E6%9C%80%E5%A4%A7%E9%A1%B5%E6%95%B0-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98-%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F%EF%BC%88%E9%A1%B5%E6%A1%86%E7%9B%B8%E5%85%B3%EF%BC%89"><span class="toc-number">4.0.0.1.2.</span> <span class="toc-text">物理(实际)最大页数 &#x3D; 物理内存 &#x2F; 页面大小	（页框相关）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80%E5%88%92%E5%88%86"><span class="toc-number">4.0.0.1.3.</span> <span class="toc-text">逻辑地址划分</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%8D%E7%BD%AE%E9%A1%B5%E8%A1%A8"><span class="toc-number">4.0.0.1.4.</span> <span class="toc-text">反置页表</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E5%8F%B7-%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80-%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F-%EF%BC%88%E4%BB%8E0%E5%BC%80%E5%A7%8B%EF%BC%8C%E5%90%91%E4%B8%8B%E5%8F%96%E6%95%B4%EF%BC%89"><span class="toc-number">4.0.0.1.5.</span> <span class="toc-text">页面号 &#x3D; 逻辑地址&#x2F;页面大小 （从0开始，向下取整）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80"><span class="toc-number">4.0.0.1.6.</span> <span class="toc-text">逻辑地址到物理地址</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E9%A1%B5%E9%9D%A2%E5%B0%BA%E5%AF%B8"><span class="toc-number">4.0.0.1.7.</span> <span class="toc-text">最佳页面尺寸</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E7%AD%94"><span class="toc-number">4.0.0.2.</span> <span class="toc-text">简答</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8%E6%94%AF%E6%8C%81%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E7%9A%84%E7%B3%BB%E7%BB%9F%E4%B8%AD%EF%BC%8C%E4%B8%80%E4%B8%AA%E9%A1%B5%E8%A1%A8%E9%A1%B9%E4%B8%80%E8%88%AC%E8%A6%81%E5%8C%85%E5%90%AB%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF%EF%BC%9F"><span class="toc-number">4.0.0.2.1.</span> <span class="toc-text">在支持请求分页的系统中，一个页表项一般要包含哪些信息？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E8%AE%A8%E8%AE%BA%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E6%9C%BA%E5%88%B6%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">4.0.0.2.2.</span> <span class="toc-text">简要讨论多级页表机制的优缺点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86%E6%8A%80%E6%9C%AF%E5%BE%80%E5%BE%80%E4%BC%9A%E5%A2%9E%E5%8A%A0%E5%90%AB%E5%9C%B0%E5%9D%80%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C%E6%97%B6%E9%97%B4%E5%BC%80%E9%94%80%EF%BC%8C%E8%AF%95%E5%88%86%E6%9E%90%E5%A2%9E%E5%8A%A0%E7%9A%84%E6%97%B6%E9%97%B4%E5%BC%80%E9%94%80%E4%B8%BB%E8%A6%81%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%EF%BC%9F"><span class="toc-number">4.0.0.2.3.</span> <span class="toc-text">请求分页存储管理技术往往会增加含地址指令的执行时间开销，试分析增加的时间开销主要有哪些？如何应对？</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.0.0.3.</span> <span class="toc-text">页面替换算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%88%E8%BF%9B%E5%85%88%E5%87%BA%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95%EF%BC%88FIFO%EF%BC%89-First-In-First-Out"><span class="toc-number">4.0.0.3.1.</span> <span class="toc-text">先进先出页面替换算法（FIFO） First In First Out</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%9C%BA%E4%BC%9A%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-Second-Chance"><span class="toc-number">4.0.0.3.2.</span> <span class="toc-text">第二次机会页面替换算法  Second Chance</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%B6%E9%92%9F%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.0.0.3.3.</span> <span class="toc-text">时钟页面替换算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E7%94%A8%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-LRU-Least-Recently-Used"><span class="toc-number">4.0.0.3.4.</span> <span class="toc-text">最近最少用页面替换算法(LRU) Least Recently Used</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E8%BF%91%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-NRU-Not-Recently-Used"><span class="toc-number">4.0.0.3.5.</span> <span class="toc-text">最近没有使用页面替换算法(NRU) Not Recently Used</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E4%B8%8D%E5%B8%B8%E7%94%A8%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-LFU"><span class="toc-number">4.0.0.3.6.</span> <span class="toc-text">最不常用页面替换算法(LFU)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%80%9C%E8%80%81%E5%8C%96%E7%AE%97%E6%B3%95%E2%80%9D-Aging"><span class="toc-number">4.0.0.3.7.</span> <span class="toc-text">“老化算法”(Aging)</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97-1"><span class="toc-number">5.0.0.1.</span> <span class="toc-text">计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%AD-inode-%E5%9D%97%E4%B8%AD%E6%96%87%E4%BB%B6%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84%E4%BF%A1%E6%81%AF%E5%8D%A0%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%EF%BC%9F"><span class="toc-number">5.0.0.1.1.</span> <span class="toc-text">该文件系统中 inode 块中文件物理结构信息占多少字节？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E7%90%86%E8%AE%BA%E6%9C%80%E5%A4%A7%E5%B0%BA%E5%AF%B8%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F"><span class="toc-number">5.0.0.1.2.</span> <span class="toc-text">单个文件的理论最大尺寸是多少？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A0%B9%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%9C%80%E5%A4%9A%E8%83%BD%E5%88%9B%E5%BB%BA%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%96%87%E4%BB%B6%E6%88%96%E5%AD%90%E7%9B%AE%E5%BD%95%EF%BC%88%E5%8C%85%E6%8B%AC-%E5%92%8C-%EF%BC%89%EF%BC%9F"><span class="toc-number">5.0.0.1.3.</span> <span class="toc-text">该文件系统根目录下最多能创建多少个文件或子目录（包括.和..）？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%9C%80%E5%A4%9A%E8%83%BD%E5%AE%B9%E7%BA%B3%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%EF%BC%9F-%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E4%B8%8A%E6%9C%80%E5%A4%9A%E8%83%BD%E5%8C%85%E5%90%AB%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%96%87%E4%BB%B6%EF%BC%88%E5%8C%85%E6%8B%AC%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%EF%BC%89%EF%BC%9F"><span class="toc-number">5.0.0.1.4.</span> <span class="toc-text">该文件系统最多能容纳多少个文件或目录？ &#x2F;   该文件系统理论上最多能包含多少个文件（包括目录文件）？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E6%9F%90%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%9C%89-610-%E4%B8%AA%E6%96%87%E4%BB%B6%E5%92%8C-40-%E4%B8%AA%E5%AD%90%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%88%99%E8%AF%A5%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%E5%8D%A0%E5%A4%9A%E5%B0%91%E4%B8%AA%E7%89%A9%E7%90%86%E5%9D%97%EF%BC%9F"><span class="toc-number">5.0.0.1.5.</span> <span class="toc-text">如果某个目录下有 610 个文件和 40 个子目录，则该目录文件占多少个物理块？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%90%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6-%E6%96%87%E4%BB%B6%E5%8D%A0%E5%A4%9A%E5%B0%91%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4"><span class="toc-number">5.0.0.1.6.</span> <span class="toc-text">某目录文件 &#x2F; 文件占多少磁盘空间</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">5.0.0.2.</span> <span class="toc-text">链接</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A1%AC%E9%93%BE%E6%8E%A5"><span class="toc-number">5.0.0.2.1.</span> <span class="toc-text">硬链接</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5"><span class="toc-number">5.0.0.2.2.</span> <span class="toc-text">符号链接</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#shell-link"><span class="toc-number">5.0.0.2.3.</span> <span class="toc-text">shell link</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%B2%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%A1%A8%E9%A1%B9"><span class="toc-number">5.0.0.3.</span> <span class="toc-text">已打开文件表项</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%B7%B2%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%A1%A8%E9%A1%B9"><span class="toc-number">5.0.0.3.1.</span> <span class="toc-text">用户已打开文件表项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%B7%B2%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%A1%A8%E9%A1%B9"><span class="toc-number">5.0.0.3.2.</span> <span class="toc-text">系统已打开文件表项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B4%BB%E5%8A%A8-inode"><span class="toc-number">5.0.0.3.3.</span> <span class="toc-text">活动 inode</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="toc-number">5.0.0.3.4.</span> <span class="toc-text">引用关系示意图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#open"><span class="toc-number">5.0.0.3.5.</span> <span class="toc-text">open</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E8%AF%BB%E5%8F%96%E6%AC%A1%E6%95%B0"><span class="toc-number">5.0.0.4.</span> <span class="toc-text">磁盘读取次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-number">5.0.0.5.</span> <span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#read"><span class="toc-number">5.0.0.5.1.</span> <span class="toc-text">read</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#write"><span class="toc-number">5.0.0.5.2.</span> <span class="toc-text">write</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">5.0.0.6.</span> <span class="toc-text">不一致性</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A3%81%E7%9B%98"><span class="toc-number">6.</span> <span class="toc-text">磁盘</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%87%82%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">6.0.0.1.</span> <span class="toc-text">移动臂调度算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%88%E6%9D%A5%E5%85%88%E6%9C%8D%E5%8A%A1%EF%BC%88First-Come-First-Served-FCFS%EF%BC%89"><span class="toc-number">6.0.0.1.1.</span> <span class="toc-text">先来先服务（First-Come, First-Served, FCFS）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E7%9F%AD%E6%9F%A5%E6%89%BE%E6%97%B6%E9%97%B4%E4%BC%98%E5%85%88%EF%BC%88Shortest-Seek-Time-First-SSTF%EF%BC%89"><span class="toc-number">6.0.0.1.2.</span> <span class="toc-text">最短查找时间优先（Shortest Seek Time First, SSTF）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6%EF%BC%88LOOK%EF%BC%89"><span class="toc-number">6.0.0.1.3.</span> <span class="toc-text">电梯调度（LOOK）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%AB%E6%8F%8F%E6%B3%95%EF%BC%88SCAN%EF%BC%89"><span class="toc-number">6.0.0.1.4.</span> <span class="toc-text">扫描法（SCAN）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%95%E5%90%91%E6%89%AB%E6%8F%8F%EF%BC%88%E5%BE%AA%E7%8E%AF%E6%89%AB%E6%8F%8F%EF%BC%89-%EF%BC%88C-SCAN%EF%BC%89"><span class="toc-number">6.0.0.1.5.</span> <span class="toc-text">单向扫描（循环扫描） （C-SCAN）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97-2"><span class="toc-number">6.0.0.2.</span> <span class="toc-text">计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%87%82%E7%BB%8F%E5%8E%86%E7%9A%84%E6%80%BB%E6%9F%B1%E9%9D%A2%E6%95%B0"><span class="toc-number">6.0.0.2.1.</span> <span class="toc-text">移动臂经历的总柱面数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E7%A3%81%E7%9B%98%E5%AE%B9%E9%87%8F%E6%98%AF%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%EF%BC%9F"><span class="toc-number">6.0.0.2.2.</span> <span class="toc-text">该磁盘容量是多少字节？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E7%90%86%E8%AE%BA%E4%BC%A0%E8%BE%93%E9%80%9F%E7%8E%87%E6%98%AF%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%E6%AF%8F%E7%A7%92%EF%BC%9F"><span class="toc-number">6.0.0.2.3.</span> <span class="toc-text">最大理论传输速率是多少字节每秒？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%9F%90%E4%B8%AA%E6%89%87%E5%8C%BA%E7%9A%84%E5%B9%B3%E5%9D%87%E5%BE%AA%E7%8E%AF%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F"><span class="toc-number">6.0.0.2.4.</span> <span class="toc-text">访问某个扇区的平均循环等待时间是多少？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E9%87%87%E7%94%A8%E4%BD%8D%E7%A4%BA%E5%9B%BE%E6%96%B9%E5%BC%8F%E7%AE%A1%E7%90%86%E7%A3%81%E7%9B%98%E7%9A%84%E7%A9%BA%E9%97%B2%E6%89%87%E5%8C%BA%EF%BC%8C%E4%BD%8D%E7%A4%BA%E5%9B%BE%E9%9C%80%E8%A6%81%E5%8D%A0%E5%A4%9A%E5%B0%91%E6%89%87%E5%8C%BA%EF%BC%9F"><span class="toc-number">6.0.0.2.5.</span> <span class="toc-text">如果采用位示图方式管理磁盘的空闲扇区，位示图需要占多少扇区？</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E7%AD%94-1"><span class="toc-number">6.0.0.3.</span> <span class="toc-text">简答</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5"><span class="toc-number">7.</span> <span class="toc-text">同步</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        操作系统os复习
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">xk</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-06-21T16:00:00.000Z" class="dt-published" itemprop="datePublished">2024-06-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <blockquote>
+<p>面向往年卷的复习qwq</p>
+</blockquote>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><h4 id="进程树-运行结果"><a href="#进程树-运行结果" class="headerlink" title="进程树 &amp; 运行结果"></a>进程树 &amp; 运行结果</h4><h5 id="eg1"><a href="#eg1" class="headerlink" title="eg1"></a>eg1</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fd = open(&quot;data.txt, 0_RDONLY&quot;)  //data.txt:&quot;abcdefghijklmnopqrst&quot;</span><br><span class="line">fork();</span><br><span class="line">fork();</span><br><span class="line">read(fd, &amp;buffer, 2);</span><br><span class="line">printf(&quot;%d, %s\n&quot;, getpid(), buffer);</span><br></pre></td></tr></table></figure>
+
+<p>代码运行过程中，共产生4个进程，进程树：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1(shell)</span><br><span class="line">2</span><br><span class="line"> 3   4</span><br><span class="line"> 5</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2, ab</span><br><span class="line">3, cd</span><br><span class="line">4, ef</span><br><span class="line">5, gh</span><br></pre></td></tr></table></figure>
+
+<h5 id="eg2"><a href="#eg2" class="headerlink" title="eg2"></a>eg2</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int i</span><br><span class="line">for (i=0; i&lt;4; i++)</span><br><span class="line">	if (fork() == 0) break;</span><br><span class="line">printf(&quot;%d-%d: %d\n&quot;, getpid(), getppid(), i)</span><br></pre></td></tr></table></figure>
+
+<p>代码运行时，创建了5个进程，进程树：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">		1000(shell)</span><br><span class="line">		1001</span><br><span class="line">1002 1003 1004 1005</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1001-1000: 4</span><br><span class="line">1002-1001: 0</span><br><span class="line">1003-1001: 1</span><br><span class="line">1004-1001: 2</span><br><span class="line">1005-1001: 3</span><br></pre></td></tr></table></figure>
+
+<h5 id="eg3"><a href="#eg3" class="headerlink" title="eg3"></a>eg3</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int count = 0</span><br><span class="line">for (int i=0; i&lt;2; i++)</span><br><span class="line">	if (fork() &gt; 0) break;</span><br><span class="line">for (int j=0; i&lt;20; j++)</span><br><span class="line">	count++</span><br><span class="line">printf(&quot;Count: %d\n&quot;, count);</span><br></pre></td></tr></table></figure>
+
+<p>代码运行过程中创建了3个进程，进程树：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1(shell)</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：都是Count: 20，因为每个进程相互独立，count 计数器在各自进程的栈空间中，互不干扰</p>
+<h5 id="eg4"><a href="#eg4" class="headerlink" title="eg4"></a>eg4</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int count = 0</span><br><span class="line">count += fork();</span><br><span class="line">count += fork();</span><br><span class="line">count += fork();</span><br><span class="line">printf(&quot;%d-%d: %d\n&quot;, getpid(), getppid(), count);</span><br></pre></td></tr></table></figure>
+
+<p>进程树</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  0(shell)</span><br><span class="line">	1</span><br><span class="line">2	3	4</span><br><span class="line"> 5  6  7</span><br><span class="line"> 8</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1: 0 +2+3+4		9</span><br><span class="line">2: 0 +0+5+6		11</span><br><span class="line">3: 2 +0+7		9</span><br><span class="line">4: 5 +0			5</span><br><span class="line">5: 0 +0+8		8</span><br><span class="line">6: 5 +0			5</span><br><span class="line">7: 2 +0			2</span><br><span class="line">8: 0 +0			0</span><br></pre></td></tr></table></figure>
+
+<p>结果不唯一，因为父子进程调度执行的先后顺序不定，例如长子进程可能在次子进程之后执行 fork 系统调用；不同进程执行 printf 的先后顺序不定；</p>
+<h4 id="管道通信机制"><a href="#管道通信机制" class="headerlink" title="管道通信机制"></a>管道通信机制</h4><p>可用于具有亲缘关系的进程间的通信，允许一个进程和另一个与它有共同祖先的进程之间进行通信，由shell进程创建。</p>
+<p>cat，拼接指定的若干个文件的内容并输出到标准输出设备</p>
+<p>sort，排序指定文件或标准输入设备文件的内容，默认升序排序</p>
+<h5 id="eg1-1"><a href="#eg1-1" class="headerlink" title="eg1"></a>eg1</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file1 file2 | sort</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：1 2 3 4 5 6 7 8</p>
+<p>命令执行过程中，系统产生了两个兄弟关系的子进程：<br>一个用来执行 <code>cat file1 file2</code> ，并把输出重定向到管道<br>一个执行 <code>sort</code> ，其输入重定向到管道</p>
+<h5 id="eg2-1"><a href="#eg2-1" class="headerlink" title="eg2"></a>eg2</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat fileA.txt fileB.txt | sort &gt; sorted.txt</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：输出一个文件 sorted.txt 文件，文件中的内容为 1 2 3 4 5 6 7 8</p>
+<p>命令执行过程中，会创建2个进程，都是 shell 的子进程<br>cat 进程输出重定向到管道，sort 进程输入重定向到管道，输出重定向到 sorted.txt 文件</p>
+<h5 id="其他进程间通信机制"><a href="#其他进程间通信机制" class="headerlink" title="其他进程间通信机制"></a>其他进程间通信机制</h5><p>信号机制、消息队列、共享内存、套接字</p>
+<h4 id="API函数与系统调用"><a href="#API函数与系统调用" class="headerlink" title="API函数与系统调用"></a>API函数与系统调用</h4><p><strong>系统调用</strong>：是操作系统提供给用户访问内核空间的特殊接口，其对应的服务例程属于系统程序，在内核态运行；</p>
+<p><strong>API 函数</strong>：是应用程序接口，为应用程序开发者提供便携的功能支持。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fork(), getpid(), getppid(), wait(), sleep()</span><br><span class="line">printf(), (setbuf())</span><br></pre></td></tr></table></figure>
+
+<p><strong>区别</strong>：系统调用必然访问内核态，而 API 函数强调的是如何通过接口来获得所需服务，部分 API 函数可以在用户态运行。</p>
+<p><strong>联系</strong>：一个 API 函数根据是否需要访问内核态，可能不需要或需要一至多个系统调用来实现特定功能。</p>
+<p><strong>如果不使用上述 API 函数，是否能直接进行相关系统调用？如果可以，试讨论这样做的弊端</strong><br>可以，但代码复杂度增加，可读性差；需要关注不同硬件平台、不同操作系统之间的差异，可移植性差</p>
+<h4 id="叙述过程"><a href="#叙述过程" class="headerlink" title="叙述过程"></a>叙述过程</h4><h5 id="简要叙述open系统调用的工作过程（当前工作目录是-user-os）"><a href="#简要叙述open系统调用的工作过程（当前工作目录是-user-os）" class="headerlink" title="简要叙述open系统调用的工作过程（当前工作目录是&#x2F;user&#x2F;os）"></a>简要叙述open系统调用的工作过程（当前工作目录是&#x2F;user&#x2F;os）</h5><ol>
+<li>读取根目录，找user对应的文件控制块（inode）</li>
+<li>读取user内容，找到os对应的inode</li>
+<li>读取os内容，找到data.txt对应的inode</li>
+<li>判断访问控制权限，创建活动inode，创建系统已打开文件表项，创建用户打开文件表项</li>
+</ol>
+<h5 id="简要描述-fork-的实现"><a href="#简要描述-fork-的实现" class="headerlink" title="简要描述 fork 的实现"></a>简要描述 fork 的实现</h5><p>通过系统调用陷入内核态，寻找空闲 PCB 初始化，为子进程分配新空间并复制父进程内容，父进程返回子进程 pid，子进程返回 0，创建失败返回负数。</p>
+<h5 id="简要描述管道通信机制的实现"><a href="#简要描述管道通信机制的实现" class="headerlink" title="简要描述管道通信机制的实现"></a>简要描述管道通信机制的实现</h5><p>（父进程向子进程发送数据：）</p>
+<ol>
+<li>使用 <code>pipe</code> 系统调用创建一个管道，得到两个文件描述符：一个用于读（读端），一个用于写（写端）</li>
+<li>使用 <code>fork</code> 系统调用创建子进程。父进程和子进程会共享相同的管道文件描述符。</li>
+<li>子进程关闭管道的写端，并将管道的读端重定向到标准输入。父进程关闭管道的读端，并将管道的写端重定向到标准输出。</li>
+<li>父进程写入数据到管道，子进程从管道中读取数据，实现数据传输。</li>
+<li>数据传输完成后，关闭管道的文件描述符。</li>
+</ol>
+<h5 id="简要描述输入输出重定向机制的实现"><a href="#简要描述输入输出重定向机制的实现" class="headerlink" title="简要描述输入输出重定向机制的实现"></a>简要描述输入输出重定向机制的实现</h5><p>dup2()：用于复制文件描述符，可以将一个已打开的文件描述符复制到另一个文件描述符。<br>open()：用于打开文件并返回文件描述符。<br>close()：用于关闭文件描述符。</p>
+<ol>
+<li><p>使用 <code>open</code> 系统调用打开目标文件或设备，获取一个文件描述符。</p>
+</li>
+<li><p>使用 <code>close</code> 系统调用关闭标准输入（文件描述符 0）、标准输出（文件描述符 1）或标准错误（文件描述符 2），这取决于重定向的类型。</p>
+</li>
+<li><p>使用 <code>dup</code> 或 <code>dup2</code> 系统调用，将目标文件描述符复制到标准文件描述符的位置。</p>
+</li>
+<li><p>当标准文件描述符被重定向后，进程对标准输入、输出或错误的操作就会转向目标文件或设备。</p>
+</li>
+</ol>
+<p>输入重定向：使用 <code>dup2(fd, 1)</code> 将目标文件描述符 <code>fd</code> 复制到标准输出（文件描述符 1）。使得所有标准输出的数据都写入到指定的文件或设备中。</p>
+<p>输出重定向：使用 <code>dup2(fd, 0)</code> 将目标文件描述符 <code>fd</code> 复制到标准输出（文件描述符 0）。使得程序从指定的文件或设备读取输入数据。</p>
+<h5 id="简述sleep工作过程"><a href="#简述sleep工作过程" class="headerlink" title="简述sleep工作过程"></a>简述sleep工作过程</h5><p>操作系统内核将调用 sleep 的进程从运行态转为等待态，利用时钟中断在达到指定时间后，将进程从等待态转到就绪态。</p>
+<h1 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h1><h4 id="作业调度"><a href="#作业调度" class="headerlink" title="作业调度"></a>作业调度</h4><p>先来先服务(FCFS)、最短作业优先(SJF)、（最高相应比优先）</p>
+<p>具有<strong>两道</strong>作业的批处理系统：最多只能有两个作业同时进行</p>
+<h5 id="平均周转时间-Avg-结束时间-就绪时间"><a href="#平均周转时间-Avg-结束时间-就绪时间" class="headerlink" title="平均周转时间 &#x3D; Avg {结束时间 - 就绪时间}"></a>平均周转时间 &#x3D; Avg {结束时间 - 就绪时间}</h5><h5 id="平均带权周转时间-Avg-（结束时间-就绪时间）-估计运行时间"><a href="#平均带权周转时间-Avg-（结束时间-就绪时间）-估计运行时间" class="headerlink" title="平均带权周转时间 &#x3D; Avg {  （结束时间 - 就绪时间） &#x2F; 估计运行时间 }"></a>平均带权周转时间 &#x3D; Avg {  （结束时间 - 就绪时间） &#x2F; 估计运行时间 }</h5><h4 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h4><p>时间片轮转、优先级调度（、先来先服务、多级反馈队列、最高响应比）</p>
+<p> 进程调度算法往往需要平衡 IO 密集型和计算密集型进程占用 CPU 的时间，设计此类算法最关键的问题是什么（请结合课上介绍的某个具体的算法进行讨论）？</p>
+<p>最关键问题是<strong>预测</strong>进程的行为。例如<strong>老化算法</strong>，可根据进程历史行为来预测其后续行为</p>
+<p><strong>抢占式</strong>：优点：不会使得一个低优先级进程长时间占用 CPU，更好响应优先级高的进程；缺点：进行进程调度浪费太多时间 </p>
+<p><strong>非抢占式</strong>：优点：进程调度少，CPU 利用率高；缺点：可能会使一个低优先级进程霸占 CPU，紧急的进程不能响应</p>
+<p>简要讨论批处理系统和分时系统的区别</p>
+<p><strong>批处理系统</strong>：用户脱机工作、成批处理作业、多道程序运行(早期为单道程序运行)、 作业周转时间长。</p>
+<p><strong>分时系统</strong>：同时性，多个用户同时；独立性，每个用户相对独立；及时性，快速响应用户请求；交互性，用户联机工作</p>
+<p><strong>死锁产生的必要条件</strong>有哪些？互斥条件、占有并等待条件、不剥夺条件、循环等待条件</p>
+<p>设备采用静态分配策略破坏了哪个条件？破坏了占有并等待条件 （下面）</p>
+<h4 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h4><p>可变分区、伙伴算法(Buddy) （、固定分区）</p>
+<p>伙伴算法(Buddy) ：将用户内存区域对半分割，以实现最佳适应的分配，需要时对半分割，不需要时合并</p>
+<p>仅存在“外碎片” ：可变分区、伙伴系统分配（？）<br>既存在“外碎片”又存在“内碎片”： 固定分区、分页</p>
+<h5 id="可变分区主存分配算法"><a href="#可变分区主存分配算法" class="headerlink" title="可变分区主存分配算法"></a>可变分区主存分配算法</h5><p>最先适配：起始地址从小到大，第一个满足</p>
+<p>下次适配：从上次扫描结束的位置，第一个满足</p>
+<p>最优适配：分区大小从小到大，第一个满足</p>
+<p>最坏适配：分区大小从大到小，第一个满足</p>
+<p>某时刻在内存中有三个空闲区，其首地址和大小分别是：空闲区 1（100KB，10KB），空闲区 2（200KB，20KB），空闲区 3（300KB，15KB），画出该时刻内存分布图 ； </p>
+<p>​    <img src="/images/cnos复习/image-20240627234816668.png" alt="image-20240627234816668" style="zoom: 40%;" /></p>
+<h4 id="外围设备"><a href="#外围设备" class="headerlink" title="外围设备"></a>外围设备</h4><p>静态分配，SPOOLing</p>
+<p>SPOOLing：将任务（如打印任务）先存储到磁盘或其他存储设备中，而不是立即向外围设备发送。这样做可以让操作系统管理和调度多个任务，以便在外围设备空闲时执行。这样预输入和缓输出时间与其他任务重迭进行。</p>
+<h1 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h1><p><strong>当前系统状态是否安全</strong>（银行家算法）？安全，存在<strong>安全序列</strong> P0-P4-P3-P2-P1</p>
+<p>Need &#x3D; Max - Allocation，Available &gt; Need 时可以分配，并回收 Available +&#x3D; Allocation</p>
+<p><strong>能否满足 P1 的资源申请</strong>（分配拒绝法）？不能，满足 P1 的请求之后不存在安全序列。 &#x2F; 能，满足该请求后，系统状态仍是安全的。</p>
+<p>先分配，更新 Available 和 Need，再检查是否安全</p>
+<p>修改资源分配后，系统中<strong>是否有死锁发生</strong>，涉及了哪些进程？发生了死锁，涉及进程 P0,P1,P2,P3</p>
+<p>尝试满足进程当前的需求即可，满足可回收，如果都不满足就死锁</p>
+<p><strong>银行家算法</strong>：如果系统现存的各类资源能满足其最大需求量时，就满足申请</p>
+<p>银行家算法在实际应用中存在哪些困难？难以实现，一方面很难知道每个进程需要的资源最大数，另一方面系统中进程的数量是动态变化的 （死锁检测算法可以实现）</p>
+<p><strong>Warshell传递闭包</strong> 检测死锁：有依赖关系连边，传递闭包，如果存在自己指向自己的边说明出现死锁</p>
+<p>程序中互斥信号量PV，产生的线程间死锁：发生的概率极小；操作系统不能检测出此类死锁，不是操作系统管辖的资源</p>
+<p>在 n 个进程共享 m 个资源的系统中，且所有最大需求量之和小于 m+n，则该系统不会产生死锁：考虑极端情况每个进程都申请x-1个资源，等一个资源，此时用掉的资源小于m，还有至少一个资源没有被分配，可以给一个进程做完之后释放更多的资源满足全部需求，不存在死锁</p>
+<h1 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h1><p>1KB &#x3D; 2^10 B,  1MB &#x3D; 2^20 B,  1GB &#x3D; 2^30 B</p>
+<h4 id="计算"><a href="#计算" class="headerlink" title="计算"></a>计算</h4><p>页表最大包含多少个页表项？单个页表的页表项的理论最大是多少？</p>
+<h5 id="逻辑-理论-最大页数-总地址空间2-32-B-页面大小-（页表相关）"><a href="#逻辑-理论-最大页数-总地址空间2-32-B-页面大小-（页表相关）" class="headerlink" title="逻辑(理论)最大页数 &#x3D; 总地址空间2^32 B &#x2F; 页面大小   （页表相关）"></a>逻辑(理论)最大页数 &#x3D; 总地址空间2^32 B &#x2F; 页面大小   （页表相关）</h5><p>一个进程页表的理论最大尺寸是多少字节？</p>
+<p>页表尺寸 &#x3D;  页表项大小4B * 页面数  </p>
+<p>页框号（假设从 0 开始编号）的 最大值是多少？反置页表最多包含多少页表项？</p>
+<h5 id="物理-实际-最大页数-物理内存-页面大小（页框相关）"><a href="#物理-实际-最大页数-物理内存-页面大小（页框相关）" class="headerlink" title="物理(实际)最大页数 &#x3D; 物理内存 &#x2F; 页面大小	（页框相关）"></a>物理(实际)最大页数 &#x3D; 物理内存 &#x2F; 页面大小	（页框相关）</h5><h5 id="逻辑地址划分"><a href="#逻辑地址划分" class="headerlink" title="逻辑地址划分"></a>逻辑地址划分</h5><p>页目录号、页号、页内偏移：页目录位移，页表页位移，页内位移</p>
+<p>页目录表 – 页表页 ，其中页目录表大小可变，页表页大小为一个页面大小</p>
+<p>由页面大小算页内位移，页面大小 &#x2F; 页表项大小(4B) 算页号，其余为页目录号</p>
+<h5 id="反置页表"><a href="#反置页表" class="headerlink" title="反置页表"></a>反置页表</h5><p>根据进程标识符和页号检索页表</p>
+<p>优点：节约内存，只需为所有进程维护一张表。 </p>
+<p>缺点：地址转换效率低。仅包含调入内存的页面，不包含未调入的页面，仍需要为进程建立传统页表，存放在磁盘上，发生缺页异常时需要多访问一次磁盘，速度会比较慢。（？）</p>
+<h5 id="页面号-逻辑地址-页面大小-（从0开始，向下取整）"><a href="#页面号-逻辑地址-页面大小-（从0开始，向下取整）" class="headerlink" title="页面号 &#x3D; 逻辑地址&#x2F;页面大小 （从0开始，向下取整）"></a>页面号 &#x3D; 逻辑地址&#x2F;页面大小 （从0开始，向下取整）</h5><p>逻辑地址访问序列 对应的页面访问序列？</p>
+<p>执行指令中 逻辑地址访问哪些页面？（访问当前指令所在页面，和目标地址页面，一般目标地址会引发缺页异常）</p>
+<h5 id="逻辑地址到物理地址"><a href="#逻辑地址到物理地址" class="headerlink" title="逻辑地址到物理地址"></a>逻辑地址到物理地址</h5><p>逻辑地址 &#x3D; 页号 * 页大小 + 页内偏移</p>
+<p>物理地址 &#x3D; 页框号*页大小 + 页内偏移</p>
+<p>接下来要访问的逻辑地址为 7001，给出对应的物理地址？</p>
+<p>页大小4KB，页号 &#x3D; 1，页框号10，偏移2905，物理地址10*4096+2905 &#x3D; 43865</p>
+<h5 id="最佳页面尺寸"><a href="#最佳页面尺寸" class="headerlink" title="最佳页面尺寸"></a>最佳页面尺寸</h5><p><img src="/images/cnos%E5%A4%8D%E4%B9%A0/image-20240706172320072.png" alt="image-20240706172320072"></p>
+<p>s 是进程平均占用的内存大小，e是页表项的大小，p 是页面大小</p>
+<p>假如统计结果表明进程平均占用 8MB 左右的内存空间，页面大小设为 4KB 是 否合理（给出分析过程）？<br>s &#x3D; 8MB, e &#x3D; 4B，由 p^2 &#x3D; 2se，得 p &#x3D; 8KB，因此不合理</p>
+<p>页面大小为 1KB，页表项大小为 4B。假设题中页面大小的设置是合理的，则可大致可推断出该系统中运行的进程平均占用内存大小为多少？（给出计算过程）<br>p &#x3D; 1KB, e &#x3D; 4B, 求s，由 p^2 &#x3D; 2se，解得 s &#x3D; 128KB</p>
+<h4 id="简答"><a href="#简答" class="headerlink" title="简答"></a>简答</h4><h5 id="在支持请求分页的系统中，一个页表项一般要包含哪些信息？"><a href="#在支持请求分页的系统中，一个页表项一般要包含哪些信息？" class="headerlink" title="在支持请求分页的系统中，一个页表项一般要包含哪些信息？"></a>在支持请求分页的系统中，一个页表项一般要包含哪些信息？</h5><p>页框号：指示页面在物理内存中的位置，用于将逻辑地址转换为物理地址。</p>
+<p>访问位&#x2F;引用位 R：记录页面是否被访问过。</p>
+<p>修改位&#x2F;脏位 W：记录页面是否被修改过，用于在页面换出时确定是否需要将页面写回到磁盘。</p>
+<p>锁定位：指示页面是否被锁定在内存中，防止其被换出。某些关键页面或实时系统的页面需要锁定在内存中以确保系统的稳定性和实时性。</p>
+<p>缺页（驻留）标志：指示页面是否在物理内存中。如果页面在内存中，则该位为1；如果页面不在内存中且需要从磁盘调入，则该位为0。当缺页中断发生时，该位被检查以确定是否需要将页面从磁盘调入内存。</p>
+<p>针对上述一条指令执行可能引发多次缺页中断的情况，试着给出一种软硬件配合的机制用于尽量减少缺页中断发生的情况（提示：锁定位）</p>
+<p>硬件解释 CALL 指令过程中，先期将已在内存中指令涉及的页面对应的页表项锁定位置 1，当操作系统内核页面替换算法执行时，避免淘汰锁定位为 1 的页面，从而减少缺页发生的次数。</p>
+<p>操作系统会借助时钟中断定期清零 R 位，以获得页面引用信息</p>
+<p>某页表项，其访问位是 0，修改位是 1？该页面之前被修改过，尚未写回磁盘，故修改位为 1。引用位在修改发生后经历至少一次操作内核的清零操作。</p>
+<p>什么原因导致图中 3 号页面的 W 位从 t1 时刻的 1 变为 t2 时刻的 0？3 号页面被写回了磁盘</p>
+<p>操作系统至少间隔多长时间（逻辑时钟）对访问位进行清零操作？（当前时钟164，最近访问时间-访问位：160-0, 161-0, 162-1, 163-1）至少间隔 164-161 &#x3D; 3 个逻辑时钟</p>
+<h5 id="简要讨论多级页表机制的优缺点"><a href="#简要讨论多级页表机制的优缺点" class="headerlink" title="简要讨论多级页表机制的优缺点"></a>简要讨论多级页表机制的优缺点</h5><p>优点：页表不需要连续存储在内存中，使得未使用的页面对应的页表项可不占内存空间，减少内存使用<br>缺点：增加地址转换的时间开销（多次访问内存）</p>
+<h5 id="请求分页存储管理技术往往会增加含地址指令的执行时间开销，试分析增加的时间开销主要有哪些？如何应对？"><a href="#请求分页存储管理技术往往会增加含地址指令的执行时间开销，试分析增加的时间开销主要有哪些？如何应对？" class="headerlink" title="请求分页存储管理技术往往会增加含地址指令的执行时间开销，试分析增加的时间开销主要有哪些？如何应对？"></a>请求分页存储管理技术往往会增加含地址指令的执行时间开销，试分析增加的时间开销主要有哪些？如何应对？</h5><p>查询内存页表的开销：利用硬件提供的相联存储器来缓存部分常用页表项，减少内存页表查询次数</p>
+<p>缺页引发的页面导入和导出的开销：设计更为合理的页面替换算法，减少缺页发生的次数。</p>
+<p>（页表项过多占用空间大：采用多级页表；访问速度慢：用快表）</p>
+<p>为了避免频繁缺页引发“颠簸”，系统中同时运行的进程需要满足什么条件？</p>
+<p>内存中工作集总尺寸不能超过 1GB（即物理内存大小）</p>
+<h4 id="页面替换算法"><a href="#页面替换算法" class="headerlink" title="页面替换算法"></a>页面替换算法</h4><p>先进先出、时钟页面、最近不使用</p>
+<h5 id="先进先出页面替换算法（FIFO）-First-In-First-Out"><a href="#先进先出页面替换算法（FIFO）-First-In-First-Out" class="headerlink" title="先进先出页面替换算法（FIFO） First In First Out"></a>先进先出页面替换算法（FIFO） First In First Out</h5><p>保持一个队列，按页面进入内存的时间顺序排列。<br>当需要替换页面时，选择队列中最早进入内存的页面（即队首页面）进行替换。<br>被替换的页面出队，新页面入队。</p>
+<h5 id="第二次机会页面替换算法-Second-Chance"><a href="#第二次机会页面替换算法-Second-Chance" class="headerlink" title="第二次机会页面替换算法  Second Chance"></a>第二次机会页面替换算法  Second Chance</h5><p>保持一个队列，与FIFO类似，但在替换页面之前，检查页面的访问位（通常是R位，表示最近是否被访问过）。<br>如果队首页面的访问位为1，则将其访问位清0，并将该页面移到队尾，给它一个“第二次机会”。<br>如果队首页面的访问位为0，则直接替换该页面。</p>
+<h5 id="时钟页面替换算法"><a href="#时钟页面替换算法" class="headerlink" title="时钟页面替换算法"></a>时钟页面替换算法</h5><p>是第二次机会算法的变种，通过一个环形队列（模拟时钟的表盘）来组织页面。<br>页面按顺序排列成环，使用一个指针（类似时钟的指针）指向待替换页面。<br>当需要替换页面时，检查指针指向页面的访问位：若访问位为0，则替换该页面。若访问位为1，则将其访问位清0，指针移到下一个页面，继续检查。</p>
+<h5 id="最近最少用页面替换算法-LRU-Least-Recently-Used"><a href="#最近最少用页面替换算法-LRU-Least-Recently-Used" class="headerlink" title="最近最少用页面替换算法(LRU) Least Recently Used"></a>最近最少用页面替换算法(LRU) Least Recently Used</h5><p>记录每个页面最后一次被访问的时间。<br>总是淘汰在最近一段时间里较久未被访问的页面。<br>维护一个页面淘汰队列，队尾总是指向最近访问的页面，队头是最近最少使用的页面。</p>
+<h5 id="最近没有使用页面替换算法-NRU-Not-Recently-Used"><a href="#最近没有使用页面替换算法-NRU-Not-Recently-Used" class="headerlink" title="最近没有使用页面替换算法(NRU) Not Recently Used"></a>最近没有使用页面替换算法(NRU) Not Recently Used</h5><p>根据引用位 R 和修改位 M 的组合来进行页面替换。<br>（先看引用位再看修改位）替换优先级从低到高为 (R, M):   (0, 0) -&gt; (0, 1) -&gt; (1, 0) -&gt; (1, 1)，</p>
+<h5 id="最不常用页面替换算法-LFU"><a href="#最不常用页面替换算法-LFU" class="headerlink" title="最不常用页面替换算法(LFU)"></a>最不常用页面替换算法(LFU)</h5><p>记录每个页面的访问次数。当需要替换页面时，选择访问次数最少的页面进行替换。</p>
+<h5 id="“老化算法”-Aging"><a href="#“老化算法”-Aging" class="headerlink" title="“老化算法”(Aging)"></a>“老化算法”(Aging)</h5><p>每个页面有一个计数器，表示页面的优先级。<br>定期对所有页面的计数器进行右移操作，同时将访问的页面的最高位设为1。<br>当需要替换页面时，选择计数器值最小的页面进行替换。（计数时只算R位，R位相同的看W位）</p>
+<p>LRU 页面替换算法在实际系统中能实现吗？为什么？不能实现 需要维护特殊队列，代价较大</p>
+<p>LRU 算法有哪些近似实现算法？NRU、Aging</p>
+<p>Aging 算法要接近 LRU（最近最少使用）算法的效果，需要采取什么措施？①增加寄存器位数，使其存更多历史信息 ②减小时间间隔</p>
+<p>简要描述<strong>最佳页面替换算法</strong>，该算法有何意义？当要调入一页而必须淘汰旧页时，应该淘汰以后不再访问的页，或距现在最长时间后才访问的页（1 分） 此理论算法可用做衡量各种具体算法的标准 （1 分）</p>
+<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><h4 id="计算-1"><a href="#计算-1" class="headerlink" title="计算"></a>计算</h4><p>. 和 .. 都算inode和目录项</p>
+<p>文件系统的每个 inode 包含直接索引项 12 个和一、二、三级间接索引项各 1 个，物理块大小为 1KB，每个索引项占 4B，每个 inode 占 128B</p>
+<h5 id="该文件系统中-inode-块中文件物理结构信息占多少字节？"><a href="#该文件系统中-inode-块中文件物理结构信息占多少字节？" class="headerlink" title="该文件系统中 inode 块中文件物理结构信息占多少字节？"></a>该文件系统中 inode 块中文件物理结构信息占多少字节？</h5><p>即inode中多重索引表所占空间 &#x3D; 索引项个数 * 索引项大小 &#x3D;  (12+1+1+1) * 4B &#x3D; 60B</p>
+<h5 id="单个文件的理论最大尺寸是多少？"><a href="#单个文件的理论最大尺寸是多少？" class="headerlink" title="单个文件的理论最大尺寸是多少？"></a>单个文件的理论最大尺寸是多少？</h5><p>1KB的块中可以存储1KB&#x2F;4B &#x3D; 256个索引项。单个文件理论最大尺寸  &#x3D; 总共的索引项 * 块大小 &#x3D;（12 + 256 + 256^2  + 256^3）* 1KB</p>
+<p>设某 UNIX 系统，文件系统的每个 inode 包含 10 个直接索引项和一、二、三级间接索引 项各一个，物理块大小为 1KB，每个索引项占 4B。每个目录项占 16B（包含文件名和 inode 号）。inode 区占 5000 个扇区（每扇区 512B）,每个 inode 占 64B，根目录区占 200 个扇 区。</p>
+<h5 id="该文件系统根目录下最多能创建多少个文件或子目录（包括-和-）？"><a href="#该文件系统根目录下最多能创建多少个文件或子目录（包括-和-）？" class="headerlink" title="该文件系统根目录下最多能创建多少个文件或子目录（包括.和..）？"></a>该文件系统根目录下最多能创建多少个文件或子目录（包括.和..）？</h5><p>根目录区大小 &#x2F; 目录项大小 &#x3D; 200*512B &#x2F; 16B &#x3D; 6400</p>
+<h5 id="该文件系统最多能容纳多少个文件或目录？-该文件系统理论上最多能包含多少个文件（包括目录文件）？"><a href="#该文件系统最多能容纳多少个文件或目录？-该文件系统理论上最多能包含多少个文件（包括目录文件）？" class="headerlink" title="该文件系统最多能容纳多少个文件或目录？ &#x2F;   该文件系统理论上最多能包含多少个文件（包括目录文件）？"></a>该文件系统最多能容纳多少个文件或目录？ &#x2F;   该文件系统理论上最多能包含多少个文件（包括目录文件）？</h5><p>inode区大小 &#x2F; inode大小 &#x3D; 5000 * 512B &#x2F; 64B &#x3D; 40000</p>
+<h5 id="如果某个目录下有-610-个文件和-40-个子目录，则该目录文件占多少个物理块？"><a href="#如果某个目录下有-610-个文件和-40-个子目录，则该目录文件占多少个物理块？" class="headerlink" title="如果某个目录下有 610 个文件和 40 个子目录，则该目录文件占多少个物理块？"></a>如果某个目录下有 610 个文件和 40 个子目录，则该目录文件占多少个物理块？</h5><p>目录数 * 目录项大小 &#x3D; (610 + 40) * 16B &#x3D; 10400B   10个物理块（？）</p>
+<p>说明目录文件和普通文件的主要差别？目录文件的内容为目录项，描述目录内容（如父子目录、读写属性等），不可为空；普通文件描述文件数据内容</p>
+<p><strong>目录文件大小</strong> &#x3D; 目录项数 * 目录项大小</p>
+<h5 id="某目录文件-文件占多少磁盘空间"><a href="#某目录文件-文件占多少磁盘空间" class="headerlink" title="某目录文件 &#x2F; 文件占多少磁盘空间"></a>某目录文件 &#x2F; 文件占多少磁盘空间</h5><p>空间 &#x3D; 物理块数 * 块大小 ，刚好超过目录文件 &#x2F; 文件大小即可，注意区分目录文件 &#x2F; 文件</p>
+<h4 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h4><h5 id="硬链接"><a href="#硬链接" class="headerlink" title="硬链接"></a>硬链接</h5><p>目标文件的另一个名称，指向相同的inode节点。硬链接只能用于单个文件系统，却不能跨越文件系统，可用于文件共享但不能用于目录共享， 其优点是实现简单，访问速度快 </p>
+<h5 id="符号链接"><a href="#符号链接" class="headerlink" title="符号链接"></a>符号链接</h5><p>一个独立的文件，指向另一个文件或目录的路径名。软链接的优点是能用于链接计算机系统中不同文件系统中的文件，也可用于链接目录，进一步可链接计算机网络中不同机器上的文件，这种方法的缺点是搜索文件路径的开销大，需要额外的空间查找存储路径</p>
+<p>存在一个名为 demo 的目录，该目录下除了.和..，还 存在三个文件 test1.txt、test2.txt 和 test3.txt 三个文件，其中 test1.txt 与 test2.txt 互为硬链接文件，test3.txt 为 test1.txt 的符号链接文件，test1.txt 文件 的内容为 11000 个字符 A。</p>
+<p>demo 目录文件的内容中存在多少个不同的 inode 号？该目录文件的大小？占了多少磁盘空间？</p>
+<p>4个inode号，5个目录项  5*256B &#x3D; 1280B，占据2个物理块  磁盘空间2* 1KB&#x3D; 2KB</p>
+<h5 id="shell-link"><a href="#shell-link" class="headerlink" title="shell link"></a>shell link</h5><p> <code>link(ln) src dst</code>命令的作用是将文件或目录 <code>src</code> 创建一个链接，链接的路径或名称为 <code>dst</code>。</p>
+<p>简述在 Shell 中执行“link &#x2F;test&#x2F;demo.dat &#x2F;demo.dat”时，文件系统的主要操作步骤？</p>
+<p>1 检索目录找到&#x2F;test&#x2F;demo.dat 所指向文件的索引节点编号；</p>
+<p>2 再次检索目录找到 &#x2F;demo.dat 所指文件的父目录文件，并把上一步中获得的索引节点编号与&#x2F;demo.dat 构成一个新目录项，加入到此目录文件中；</p>
+<p>3 将对应索引节点连接计数分量 i_nlink 加一。</p>
+<p>若能成功执行 Shell 命令“ln  &#x2F;users&#x2F;tom&#x2F;a.txt  &#x2F;users&#x2F;ben&#x2F;a.txt ”，则在命令执行过程中需要读取哪些文件的 inode，需要修改哪些文件的 inode？需要新增 inode 吗？需要读取 users、tom、ben、&#x2F;users&#x2F;tom&#x2F;a.txt 文件的 inode， 需要修改&#x2F;users&#x2F;ben&#x2F;a.txt 文件的 inode，不需要新增inode</p>
+<p>Shell 命令“ln -s &#x2F;users&#x2F;tom&#x2F;a.txt &#x2F;users&#x2F;ben&#x2F;a.txt”，与（三）中 Shell 命令有何不同？前一问是硬链接，这里是软链接（符号链接）</p>
+<h4 id="已打开文件表项"><a href="#已打开文件表项" class="headerlink" title="已打开文件表项"></a>已打开文件表项</h4><p>该行代码顺利运行完成后，相应的系统已打开文件表项中引用计数器的值是多少？引用计数器为 3（fork 增加一次，dup 增加一次） （？？）</p>
+<p>画出程序运行过程中用户已打开文件表项、系统已打开文件表项、活动 inode 之间的引用关系示意图？</p>
+<h5 id="用户已打开文件表项"><a href="#用户已打开文件表项" class="headerlink" title="用户已打开文件表项"></a>用户已打开文件表项</h5><p>为每个进程维护的表，每个条目表示一个打开的文件，包含文件描述符、文件偏移量、访问模式等信息。跟踪进程当前打开的文件及其状态，每个进程都有自己的用户已打开文件表，文件描述符是这个表的索引。</p>
+<h5 id="系统已打开文件表项"><a href="#系统已打开文件表项" class="headerlink" title="系统已打开文件表项"></a>系统已打开文件表项</h5><p>全系统范围内维护的表，每个条目表示一个文件，包括文件偏移量、访问模式、引用计数等信息。跟踪系统中所有打开的文件，维护文件的共享状态。引用计数用于记录有多少进程正在使用这个文件。</p>
+<h5 id="活动-inode"><a href="#活动-inode" class="headerlink" title="活动 inode"></a>活动 inode</h5><p>存储在内存中的 inode 表项，表示已打开文件的元数据。包含文件的属性（如文件类型、权限、所有者、文件大小、时间戳等）以及指向文件数据块的指针。</p>
+<p>存储文件的元数据和数据块位置。当文件被打开时，其对应的 inode 被读入内存，并在内存中保持活动状态，直到文件被关闭。</p>
+<h5 id="引用关系示意图"><a href="#引用关系示意图" class="headerlink" title="引用关系示意图"></a>引用关系示意图</h5><p>OS 内核共创建了 4 个用户已打开文件表项，2 个系统已打开文件表项，1 个活动 inode。</p>
+<img src="C:\Users\35458\AppData\Roaming\Typora\typora-user-images\image-20240628221621849.png" alt="image-20240628221621849" style="zoom:50%;" />
+
+
+
+<h5 id="open"><a href="#open" class="headerlink" title="open"></a>open</h5><p>简要描述 UNIX 系统中 open 系统调用的内核实现过程。（结合文件描述符、用 户已打开文件表、系统已打开文件表、活动 inode 列表等概念）</p>
+<p>通过系统调用陷入内核，查找目标文件对应的 inode 节点，如果未找到该文件，则进行出错处理，如果找到该文件，若它已被其他用户打开，对应 inode 已在活动 inode 表中， 否则创建系统打开文件表 file 结构表项，并在活动 inode 表中分配表项，再用磁盘 inode 填充其内容并用指针进行连接，最后将打开文件的 file 结构的指针安装到用户打开文件表中已分配的表项处，返回文件描述符</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd = open(&quot;demo.bin&quot;, O_RDONLY)</span><br></pre></td></tr></table></figure>
+
+<p><strong>fd</strong> ：文件描述符，值一般情况下为 3，含义：用户已打开文件表项索引号。</p>
+<p>文件描述符 <code>0</code> 是标准输入（stdin），文件描述符 <code>1</code> 是标准输出（stdout），文件描述符 <code>2</code> 是标准错误输出（stderr），所以，第一次成功调用 <code>open()</code> 时，通常会分配给文件描述符 <code>3</code></p>
+<p>在不修改上述代码的情况下，此代码运行时该值有没有可能为 0？可以，先 close(0), 再 exec 调用该代码 </p>
+<h4 id="磁盘读取次数"><a href="#磁盘读取次数" class="headerlink" title="磁盘读取次数"></a>磁盘读取次数</h4><p>执行到第 10 行代码 <code>fd = open(&quot;/test/demo.dat&quot;, O_RDONLY)</code> 时，试描述文件系统大致的工作过程，此过程中共计读取几次磁盘？</p>
+<p>共读取 3 次（test 目录 inode、demo.dat 目录项、demo.dat 的 inode）（？）</p>
+<img src="C:\Users\35458\AppData\Roaming\Typora\typora-user-images\image-20240628235419880.png" alt="image-20240628235419880" style="zoom: 67%;" />
+
+<p>(二)若普通文件按顺序结构组织，要读文件O的第15块，最少读取磁盘多少次?最多读取磁盘多少次?</p>
+<p>(三)若普通文件按顺序结构组织，要读文件L的第15块，最少启动磁盘多少次?最多启动磁盘多少次?</p>
+<p>(二)及(三)解题分析：</p>
+<p>已知磁盘块长 512B，故供存放目录的空间为：512-12&#x3D;500B，其中，12B为链指针。由于每个目录项占10B，且一个目录下最多存180个下级文件，即180×10&#x3D;1800B，占用磁盘块数&#x3D;1800÷500&#x3D;4 个。由于目录文件采用链接结构，若访问的文件目录在第一磁盘块则需启动磁盘1次，若访问的文件目录在第四磁盘块则需启动磁盘4次。</p>
+<p>(二)若普通文件按顺序结构组织，要读文件O的第15块</p>
+<p>最少启动磁盘次数：从内存根目录找到目录C的目录文件把第一块读入内存(第1次访盘)并查到G，然后，再把目录G的目录文件第一块读入内存(第2次访盘)并查到K。接着，再把目录K的目录文件第一块读入内存(第3次访盘)并查到O。最后，把O的第15块读入内存(第4次访盘)，故最少启动磁盘4次。</p>
+<p>最多启动磁盘次数：读入文件O的第15块最多启动盘次数则是读入每一个目录时均在目录文件的第4块查到下一级目录或文件；这样，除把文件O的第15块读入内存需1次访盘外，由目录C查目录G，由目录G查目录K，由目录K查目录O都各需4次访盘、最多启动磁盘为4x3+1&#x3D;13次。</p>
+<p>(三)若普通文件按顺序结构组织，要读文件L的第15块，最少启动磁盘多少次?最多启动磁盘多少次?</p>
+<p>最少4次，最多10次，因为由 J 查找 L 只用一次</p>
+<h4 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd = dup(fd);</span><br></pre></td></tr></table></figure>
+
+<p><strong>dup</strong> 为文件描述符复制，主要用于输入输出重定向，将文件或管道描述符拷贝至原输入或输出设备文件描述符；（见前面重定向）</p>
+<h5 id="read"><a href="#read" class="headerlink" title="read"></a>read</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rd_count = read(fd, buf, 600)</span><br></pre></td></tr></table></figure>
+
+<p>从fd中读取最多600个字节放入buf中，返回实际读取的字节数到rd_count</p>
+<p>（物理块大小1KB）试分析第 17 行 代码执行过程中逻辑块到物理块的转换过程，实际会读入多少个数据块？</p>
+<p>17 行代码需要读入 3 个物理块，但由于 21 行代码执行在前，已读入其中的 1 个物理块（被缓存），故 17 行代码实际读入 2 个物理块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lseek(fd, 10245, 0); //移动文件指针至第10245个字节</span><br><span class="line">if (read(fd, buf, 10) &lt;= 0) ...</span><br></pre></td></tr></table></figure>
+
+<p>简要分析 17 行代码中 read 引发的内核执行过程，此过程中共读取了几个数据块？（给出分析与计算过程）</p>
+<p>（物理块大小1KB）文件指针在 10245 处，读 10 个字节，即读取 10245-10254 的内容，横跨了 2 个物 理块，另外，第 2 个物理块需要通过一次间接索引查找，则额外需要读取 1 个间接索引块。 共计 3 个物理块。？？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">father: read(fd, &amp;buf, 2000) //2000</span><br><span class="line">child: read(fd, &amp;buf, 5000) //4050</span><br></pre></td></tr></table></figure>
+
+<p>（物理块大小512B）在不考虑磁盘缓冲的情况下，上述代码中父、子进程读文件时，文件系统各读取了几个物理块？ 其中有几个物理块父、子进程都读取了？</p>
+<p>父进程 4 个（1-4），子进程 9 个（4-12）。 有 1 个物理块父、子进程都读取了</p>
+<h5 id="write"><a href="#write" class="headerlink" title="write"></a>write</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fd = open(&quot;test1.txt&quot;, O_RDONLY);</span><br><span class="line">if (write(fd, &quot;1234&quot;, 4) &lt;= 0) ...</span><br></pre></td></tr></table></figure>
+
+<p>简要叙述 13 行代码中 write 引发的内核执行过程，需结合 open 系统调用；</p>
+<p>根据 write 调用的 fd 参数，查询用户已打开表项，找到对应的系统已打开表项， 根据 open 系统调用的读打开方式判断，写操作非法，返回用户态，给出错误代码。</p>
+<h4 id="不一致性"><a href="#不一致性" class="headerlink" title="不一致性"></a>不一致性</h4><p>对于唯一的块号，状态应该为（空闲，分配）&#x3D; (0, 1) 或 (1, 0) </p>
+<p>在文件系统中，会出现文件系统不一致性的现象，请简要解释这种现象产生的原因以及问题的严重性？</p>
+<p>如果管理空闲块及分配&#x2F;回收程序出现故障，则会导致不一致性错，或丢失盘块(均为 0 的情况)，或破坏信息(如重复分配)</p>
+<p>为解决文件系统的不一致性问题，常采用一个实用程序检查文件系统。在进行了 块的不一致性检查后，得到如下表所示的结果，请解释该文件系统中出现的每一种错误，并 给出处理方法。</p>
+<p>正常情况，空闲块计数与分配块计数应互补。但表中有不一致处，(1, 1)  块 2 重复出现 ， 向系统报告出错。(0, 2) 块 9 分配块重复出现，盘块被分了二次，严重错误，立即报告。(0, 0) 块 11 两组计数中均未出现，报告给系统但影响不大，只是该块被隔离了。(2, 0) 块 15 空闲块出现两次， 可删去一个块 15 号。</p>
+<h1 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h1><p>柱面 – 磁头 – 扇区 （CHS寻址方式）</p>
+<h4 id="移动臂调度算法"><a href="#移动臂调度算法" class="headerlink" title="移动臂调度算法"></a>移动臂调度算法</h4><p>假设磁头当前位置在50，有以下请求（柱面号）：82, 170, 43, 140, 24, 16, 190。</p>
+<h5 id="先来先服务（First-Come-First-Served-FCFS）"><a href="#先来先服务（First-Come-First-Served-FCFS）" class="headerlink" title="先来先服务（First-Come, First-Served, FCFS）"></a>先来先服务（First-Come, First-Served, FCFS）</h5><p>按请求到达的顺序依次处理请求</p>
+<p> 50 -&gt; 82 -&gt; 170 -&gt; 43 -&gt; 140 -&gt; 24 -&gt; 16 -&gt; 190</p>
+<h5 id="最短查找时间优先（Shortest-Seek-Time-First-SSTF）"><a href="#最短查找时间优先（Shortest-Seek-Time-First-SSTF）" class="headerlink" title="最短查找时间优先（Shortest Seek Time First, SSTF）"></a>最短查找时间优先（Shortest Seek Time First, SSTF）</h5><p>优先处理离当前位置最近的请求</p>
+<p>50 -&gt; 43 -&gt; 24 -&gt; 16 -&gt; 82 -&gt; 140 -&gt; 170 -&gt; 190</p>
+<h5 id="电梯调度（LOOK）"><a href="#电梯调度（LOOK）" class="headerlink" title="电梯调度（LOOK）"></a>电梯调度（LOOK）</h5><p>磁头向一个方向移动直到没有更多请求，然后反向。类似于电梯的运行方式，因此得名“电梯调度”</p>
+<p>50 -&gt; 43 -&gt; 24 -&gt; 16 -&gt; 82 -&gt; 140 -&gt; 170 -&gt; 190</p>
+<h5 id="扫描法（SCAN）"><a href="#扫描法（SCAN）" class="headerlink" title="扫描法（SCAN）"></a>扫描法（SCAN）</h5><p>磁头从一个端到另一个端移动，处理所有请求，然后反向移动并处理所有请求。类似于LOOK，但会一直移动到磁盘的物理端。</p>
+<p>50 -&gt; 43 -&gt; 24 -&gt; 16 -&gt; 0 -&gt; 82 -&gt; 140 -&gt; 170 -&gt; 190</p>
+<h5 id="单向扫描（循环扫描）-（C-SCAN）"><a href="#单向扫描（循环扫描）-（C-SCAN）" class="headerlink" title="单向扫描（循环扫描） （C-SCAN）"></a>单向扫描（循环扫描） （C-SCAN）</h5><p>磁头向一个方向移动并处理所有请求，到达磁盘端后直接返回起始端继续处理。类似于SCAN，但不在反向移动时处理请求</p>
+<p>50 -&gt; 82 -&gt; 140 -&gt; 170 -&gt; 190 -&gt; 0 -&gt; 16 -&gt; 24 -&gt; 43</p>
+<h4 id="计算-2"><a href="#计算-2" class="headerlink" title="计算"></a>计算</h4><h5 id="移动臂经历的总柱面数"><a href="#移动臂经历的总柱面数" class="headerlink" title="移动臂经历的总柱面数"></a>移动臂经历的总柱面数</h5><p>eg 100-110-120-129-147-186-46-41-27-10 &#x3D; 86 + 176 &#x3D; 262</p>
+<p>51+69+49+51+95</p>
+<p>设有一个包含了 16 个磁头(编号 0-15)和 120 个柱面(编号 0-119)的磁盘，每磁道扇 区数 200 个(编号 0-199)，每个扇区 512B，磁盘的转速为 7200rpm（转每分钟），相邻柱面间的平均寻道时间为 1ms。试</p>
+<h5 id="该磁盘容量是多少字节？"><a href="#该磁盘容量是多少字节？" class="headerlink" title="该磁盘容量是多少字节？"></a>该磁盘容量是多少字节？</h5><p>16 * 120 * 200 * 512B</p>
+<h5 id="最大理论传输速率是多少字节每秒？"><a href="#最大理论传输速率是多少字节每秒？" class="headerlink" title="最大理论传输速率是多少字节每秒？"></a>最大理论传输速率是多少字节每秒？</h5><p>一直在同一磁道&#x2F;柱面  转到的每个字节都有用，7200 rpm * 200*512B &#x2F;60s </p>
+<h5 id="访问某个扇区的平均循环等待时间是多少？"><a href="#访问某个扇区的平均循环等待时间是多少？" class="headerlink" title="访问某个扇区的平均循环等待时间是多少？"></a>访问某个扇区的平均循环等待时间是多少？</h5><p>磁盘转半周的时间 ( 60s &#x2F;7200rpm ) &#x2F;2</p>
+<p> 设有一个包含了 32 个磁头(编号 0-31)和 200 个柱面(编号 0-199)的磁盘，每磁道扇区数 200 个(编号 0-199)，每个扇区 512B，磁盘的转速为 7200rpm（转每分钟）。</p>
+<h5 id="如果采用位示图方式管理磁盘的空闲扇区，位示图需要占多少扇区？"><a href="#如果采用位示图方式管理磁盘的空闲扇区，位示图需要占多少扇区？" class="headerlink" title="如果采用位示图方式管理磁盘的空闲扇区，位示图需要占多少扇区？"></a>如果采用位示图方式管理磁盘的空闲扇区，位示图需要占多少扇区？</h5><p>位示图用来记录磁盘上每个扇区的分配状态（空闲或已分配），通常以位的形式表示，其中每一位对应一个扇区。</p>
+<p>32 * 200 * 200 bit &#x3D; 160000B &#x2F; 512B &#x3D; 313</p>
+<p>（相邻磁道移动时间1ms）如果磁道号请求队列为：50，90，30，120。对请求队列中的每个磁道需读取1个随机分布的扇区，则读完这4个扇区点共需要多少时间?(给出计算过程)<br>采用 CSCAN 调度算法，访问磁道的顺序为120，30，50，90，则移动磁道长度为0+79+199+30+20+40&#x3D;388，总的<strong>磁道移动时间</strong>为388×1ms&#x3D;388ms。<br>由于转速为6000r&#x2F;m，则平均旋转延迟时间为60&#x2F;(6000x2)×1000ms&#x3D;5ms，总的<strong>扇区旋转时间</strong>为5msx4&#x3D;20ms。<br>由于转速为 6000r&#x2F;m，则读取一个磁道上的一个扇区的平均读取时间为10ms&#x2F;100&#x3D;0.1ms，总的<strong>读取扇区时间</strong>&#x3D;0.1msx4&#x3D;0.4ms。<br>读取上述磁道上的所有4个扇区所花费的总时间&#x3D;388ms+20ms+0.4ms&#x3D;408.4ms。</p>
+<h4 id="简答-1"><a href="#简答-1" class="headerlink" title="简答"></a>简答</h4><p>为提高输入输出效率，是否有必要对相同柱面不同扇区和不同磁头号的请求进行合并操作？（简要说明原因）<br>有必要。柱面间移动耗时较多，将相同柱面请求合并处理，能减少移动臂移动总量。</p>
+<p>若有多个磁盘请求在同一柱面的多个不同扇区上，应采用什么措施提高磁盘访问的效率？<br>归并同一柱面的请求，并对同一柱面请求按<strong>循环排序</strong>的原则（如从小号扇区到大号扇区，或者反之）依次完成请求</p>
+<p>上述哪种移动臂调度算法会导致“饥饿”现象发生？最短查找时间优先调度算法</p>
+<p>实际系统中的磁盘驱动调度算法往往会区分读请求和写请求，请简要讨论其合理性？读写请求的时间容忍度不同，写的容忍度高，因为可以延迟写</p>
+<h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1><p>信号量PV</p>
+<p>管程wait signal</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/projects/">Projects</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">进程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%A0%91-%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">进程树 &amp; 运行结果</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#eg1"><span class="toc-number">1.0.0.1.1.</span> <span class="toc-text">eg1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg2"><span class="toc-number">1.0.0.1.2.</span> <span class="toc-text">eg2</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg3"><span class="toc-number">1.0.0.1.3.</span> <span class="toc-text">eg3</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg4"><span class="toc-number">1.0.0.1.4.</span> <span class="toc-text">eg4</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">管道通信机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#eg1-1"><span class="toc-number">1.0.0.2.1.</span> <span class="toc-text">eg1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#eg2-1"><span class="toc-number">1.0.0.2.2.</span> <span class="toc-text">eg2</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.0.2.3.</span> <span class="toc-text">其他进程间通信机制</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#API%E5%87%BD%E6%95%B0%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">API函数与系统调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%99%E8%BF%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">叙述过程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E5%8F%99%E8%BF%B0open%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%88%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E6%98%AF-user-os%EF%BC%89"><span class="toc-number">1.0.0.4.1.</span> <span class="toc-text">简要叙述open系统调用的工作过程（当前工作目录是&#x2F;user&#x2F;os）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0-fork-%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.0.4.2.</span> <span class="toc-text">简要描述 fork 的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0%E7%AE%A1%E9%81%93%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.0.4.3.</span> <span class="toc-text">简要描述管道通信机制的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.0.4.4.</span> <span class="toc-text">简要描述输入输出重定向机制的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0sleep%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.0.4.5.</span> <span class="toc-text">简述sleep工作过程</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A"><span class="toc-number">2.</span> <span class="toc-text">作业</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">作业调度</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E5%91%A8%E8%BD%AC%E6%97%B6%E9%97%B4-Avg-%E7%BB%93%E6%9D%9F%E6%97%B6%E9%97%B4-%E5%B0%B1%E7%BB%AA%E6%97%B6%E9%97%B4"><span class="toc-number">2.0.0.1.1.</span> <span class="toc-text">平均周转时间 &#x3D; Avg {结束时间 - 就绪时间}</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E5%B8%A6%E6%9D%83%E5%91%A8%E8%BD%AC%E6%97%B6%E9%97%B4-Avg-%EF%BC%88%E7%BB%93%E6%9D%9F%E6%97%B6%E9%97%B4-%E5%B0%B1%E7%BB%AA%E6%97%B6%E9%97%B4%EF%BC%89-%E4%BC%B0%E8%AE%A1%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4"><span class="toc-number">2.0.0.1.2.</span> <span class="toc-text">平均带权周转时间 &#x3D; Avg {  （结束时间 - 就绪时间） &#x2F; 估计运行时间 }</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">进程调度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-number">2.0.0.3.</span> <span class="toc-text">存储管理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%88%86%E5%8C%BA%E4%B8%BB%E5%AD%98%E5%88%86%E9%85%8D%E7%AE%97%E6%B3%95"><span class="toc-number">2.0.0.3.1.</span> <span class="toc-text">可变分区主存分配算法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%96%E5%9B%B4%E8%AE%BE%E5%A4%87"><span class="toc-number">2.0.0.4.</span> <span class="toc-text">外围设备</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B5%84%E6%BA%90"><span class="toc-number">3.</span> <span class="toc-text">资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E9%A1%B5"><span class="toc-number">4.</span> <span class="toc-text">分页</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97"><span class="toc-number">4.0.0.1.</span> <span class="toc-text">计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91-%E7%90%86%E8%AE%BA-%E6%9C%80%E5%A4%A7%E9%A1%B5%E6%95%B0-%E6%80%BB%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B42-32-B-%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F-%EF%BC%88%E9%A1%B5%E8%A1%A8%E7%9B%B8%E5%85%B3%EF%BC%89"><span class="toc-number">4.0.0.1.1.</span> <span class="toc-text">逻辑(理论)最大页数 &#x3D; 总地址空间2^32 B &#x2F; 页面大小   （页表相关）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%A9%E7%90%86-%E5%AE%9E%E9%99%85-%E6%9C%80%E5%A4%A7%E9%A1%B5%E6%95%B0-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98-%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F%EF%BC%88%E9%A1%B5%E6%A1%86%E7%9B%B8%E5%85%B3%EF%BC%89"><span class="toc-number">4.0.0.1.2.</span> <span class="toc-text">物理(实际)最大页数 &#x3D; 物理内存 &#x2F; 页面大小	（页框相关）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80%E5%88%92%E5%88%86"><span class="toc-number">4.0.0.1.3.</span> <span class="toc-text">逻辑地址划分</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%8D%E7%BD%AE%E9%A1%B5%E8%A1%A8"><span class="toc-number">4.0.0.1.4.</span> <span class="toc-text">反置页表</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E5%8F%B7-%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80-%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F-%EF%BC%88%E4%BB%8E0%E5%BC%80%E5%A7%8B%EF%BC%8C%E5%90%91%E4%B8%8B%E5%8F%96%E6%95%B4%EF%BC%89"><span class="toc-number">4.0.0.1.5.</span> <span class="toc-text">页面号 &#x3D; 逻辑地址&#x2F;页面大小 （从0开始，向下取整）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%9C%B0%E5%9D%80%E5%88%B0%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80"><span class="toc-number">4.0.0.1.6.</span> <span class="toc-text">逻辑地址到物理地址</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E9%A1%B5%E9%9D%A2%E5%B0%BA%E5%AF%B8"><span class="toc-number">4.0.0.1.7.</span> <span class="toc-text">最佳页面尺寸</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E7%AD%94"><span class="toc-number">4.0.0.2.</span> <span class="toc-text">简答</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8%E6%94%AF%E6%8C%81%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E7%9A%84%E7%B3%BB%E7%BB%9F%E4%B8%AD%EF%BC%8C%E4%B8%80%E4%B8%AA%E9%A1%B5%E8%A1%A8%E9%A1%B9%E4%B8%80%E8%88%AC%E8%A6%81%E5%8C%85%E5%90%AB%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF%EF%BC%9F"><span class="toc-number">4.0.0.2.1.</span> <span class="toc-text">在支持请求分页的系统中，一个页表项一般要包含哪些信息？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E8%AE%A8%E8%AE%BA%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E6%9C%BA%E5%88%B6%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">4.0.0.2.2.</span> <span class="toc-text">简要讨论多级页表机制的优缺点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86%E6%8A%80%E6%9C%AF%E5%BE%80%E5%BE%80%E4%BC%9A%E5%A2%9E%E5%8A%A0%E5%90%AB%E5%9C%B0%E5%9D%80%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C%E6%97%B6%E9%97%B4%E5%BC%80%E9%94%80%EF%BC%8C%E8%AF%95%E5%88%86%E6%9E%90%E5%A2%9E%E5%8A%A0%E7%9A%84%E6%97%B6%E9%97%B4%E5%BC%80%E9%94%80%E4%B8%BB%E8%A6%81%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%EF%BC%9F"><span class="toc-number">4.0.0.2.3.</span> <span class="toc-text">请求分页存储管理技术往往会增加含地址指令的执行时间开销，试分析增加的时间开销主要有哪些？如何应对？</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.0.0.3.</span> <span class="toc-text">页面替换算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%88%E8%BF%9B%E5%85%88%E5%87%BA%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95%EF%BC%88FIFO%EF%BC%89-First-In-First-Out"><span class="toc-number">4.0.0.3.1.</span> <span class="toc-text">先进先出页面替换算法（FIFO） First In First Out</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%9C%BA%E4%BC%9A%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-Second-Chance"><span class="toc-number">4.0.0.3.2.</span> <span class="toc-text">第二次机会页面替换算法  Second Chance</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%B6%E9%92%9F%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.0.0.3.3.</span> <span class="toc-text">时钟页面替换算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E7%94%A8%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-LRU-Least-Recently-Used"><span class="toc-number">4.0.0.3.4.</span> <span class="toc-text">最近最少用页面替换算法(LRU) Least Recently Used</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E8%BF%91%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-NRU-Not-Recently-Used"><span class="toc-number">4.0.0.3.5.</span> <span class="toc-text">最近没有使用页面替换算法(NRU) Not Recently Used</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E4%B8%8D%E5%B8%B8%E7%94%A8%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-LFU"><span class="toc-number">4.0.0.3.6.</span> <span class="toc-text">最不常用页面替换算法(LFU)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%80%9C%E8%80%81%E5%8C%96%E7%AE%97%E6%B3%95%E2%80%9D-Aging"><span class="toc-number">4.0.0.3.7.</span> <span class="toc-text">“老化算法”(Aging)</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97-1"><span class="toc-number">5.0.0.1.</span> <span class="toc-text">计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%AD-inode-%E5%9D%97%E4%B8%AD%E6%96%87%E4%BB%B6%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84%E4%BF%A1%E6%81%AF%E5%8D%A0%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%EF%BC%9F"><span class="toc-number">5.0.0.1.1.</span> <span class="toc-text">该文件系统中 inode 块中文件物理结构信息占多少字节？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E7%90%86%E8%AE%BA%E6%9C%80%E5%A4%A7%E5%B0%BA%E5%AF%B8%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F"><span class="toc-number">5.0.0.1.2.</span> <span class="toc-text">单个文件的理论最大尺寸是多少？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A0%B9%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%9C%80%E5%A4%9A%E8%83%BD%E5%88%9B%E5%BB%BA%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%96%87%E4%BB%B6%E6%88%96%E5%AD%90%E7%9B%AE%E5%BD%95%EF%BC%88%E5%8C%85%E6%8B%AC-%E5%92%8C-%EF%BC%89%EF%BC%9F"><span class="toc-number">5.0.0.1.3.</span> <span class="toc-text">该文件系统根目录下最多能创建多少个文件或子目录（包括.和..）？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%9C%80%E5%A4%9A%E8%83%BD%E5%AE%B9%E7%BA%B3%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%EF%BC%9F-%E8%AF%A5%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E4%B8%8A%E6%9C%80%E5%A4%9A%E8%83%BD%E5%8C%85%E5%90%AB%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%96%87%E4%BB%B6%EF%BC%88%E5%8C%85%E6%8B%AC%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%EF%BC%89%EF%BC%9F"><span class="toc-number">5.0.0.1.4.</span> <span class="toc-text">该文件系统最多能容纳多少个文件或目录？ &#x2F;   该文件系统理论上最多能包含多少个文件（包括目录文件）？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E6%9F%90%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%9C%89-610-%E4%B8%AA%E6%96%87%E4%BB%B6%E5%92%8C-40-%E4%B8%AA%E5%AD%90%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%88%99%E8%AF%A5%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%E5%8D%A0%E5%A4%9A%E5%B0%91%E4%B8%AA%E7%89%A9%E7%90%86%E5%9D%97%EF%BC%9F"><span class="toc-number">5.0.0.1.5.</span> <span class="toc-text">如果某个目录下有 610 个文件和 40 个子目录，则该目录文件占多少个物理块？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%90%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6-%E6%96%87%E4%BB%B6%E5%8D%A0%E5%A4%9A%E5%B0%91%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4"><span class="toc-number">5.0.0.1.6.</span> <span class="toc-text">某目录文件 &#x2F; 文件占多少磁盘空间</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">5.0.0.2.</span> <span class="toc-text">链接</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A1%AC%E9%93%BE%E6%8E%A5"><span class="toc-number">5.0.0.2.1.</span> <span class="toc-text">硬链接</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5"><span class="toc-number">5.0.0.2.2.</span> <span class="toc-text">符号链接</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#shell-link"><span class="toc-number">5.0.0.2.3.</span> <span class="toc-text">shell link</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%B2%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%A1%A8%E9%A1%B9"><span class="toc-number">5.0.0.3.</span> <span class="toc-text">已打开文件表项</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%B7%B2%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%A1%A8%E9%A1%B9"><span class="toc-number">5.0.0.3.1.</span> <span class="toc-text">用户已打开文件表项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%B7%B2%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E8%A1%A8%E9%A1%B9"><span class="toc-number">5.0.0.3.2.</span> <span class="toc-text">系统已打开文件表项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B4%BB%E5%8A%A8-inode"><span class="toc-number">5.0.0.3.3.</span> <span class="toc-text">活动 inode</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E5%85%B3%E7%B3%BB%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="toc-number">5.0.0.3.4.</span> <span class="toc-text">引用关系示意图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#open"><span class="toc-number">5.0.0.3.5.</span> <span class="toc-text">open</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E8%AF%BB%E5%8F%96%E6%AC%A1%E6%95%B0"><span class="toc-number">5.0.0.4.</span> <span class="toc-text">磁盘读取次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-number">5.0.0.5.</span> <span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#read"><span class="toc-number">5.0.0.5.1.</span> <span class="toc-text">read</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#write"><span class="toc-number">5.0.0.5.2.</span> <span class="toc-text">write</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">5.0.0.6.</span> <span class="toc-text">不一致性</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A3%81%E7%9B%98"><span class="toc-number">6.</span> <span class="toc-text">磁盘</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%87%82%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">6.0.0.1.</span> <span class="toc-text">移动臂调度算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%88%E6%9D%A5%E5%85%88%E6%9C%8D%E5%8A%A1%EF%BC%88First-Come-First-Served-FCFS%EF%BC%89"><span class="toc-number">6.0.0.1.1.</span> <span class="toc-text">先来先服务（First-Come, First-Served, FCFS）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E7%9F%AD%E6%9F%A5%E6%89%BE%E6%97%B6%E9%97%B4%E4%BC%98%E5%85%88%EF%BC%88Shortest-Seek-Time-First-SSTF%EF%BC%89"><span class="toc-number">6.0.0.1.2.</span> <span class="toc-text">最短查找时间优先（Shortest Seek Time First, SSTF）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6%EF%BC%88LOOK%EF%BC%89"><span class="toc-number">6.0.0.1.3.</span> <span class="toc-text">电梯调度（LOOK）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%AB%E6%8F%8F%E6%B3%95%EF%BC%88SCAN%EF%BC%89"><span class="toc-number">6.0.0.1.4.</span> <span class="toc-text">扫描法（SCAN）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%95%E5%90%91%E6%89%AB%E6%8F%8F%EF%BC%88%E5%BE%AA%E7%8E%AF%E6%89%AB%E6%8F%8F%EF%BC%89-%EF%BC%88C-SCAN%EF%BC%89"><span class="toc-number">6.0.0.1.5.</span> <span class="toc-text">单向扫描（循环扫描） （C-SCAN）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97-2"><span class="toc-number">6.0.0.2.</span> <span class="toc-text">计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%87%82%E7%BB%8F%E5%8E%86%E7%9A%84%E6%80%BB%E6%9F%B1%E9%9D%A2%E6%95%B0"><span class="toc-number">6.0.0.2.1.</span> <span class="toc-text">移动臂经历的总柱面数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%A5%E7%A3%81%E7%9B%98%E5%AE%B9%E9%87%8F%E6%98%AF%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%EF%BC%9F"><span class="toc-number">6.0.0.2.2.</span> <span class="toc-text">该磁盘容量是多少字节？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E7%90%86%E8%AE%BA%E4%BC%A0%E8%BE%93%E9%80%9F%E7%8E%87%E6%98%AF%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%E6%AF%8F%E7%A7%92%EF%BC%9F"><span class="toc-number">6.0.0.2.3.</span> <span class="toc-text">最大理论传输速率是多少字节每秒？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%9F%90%E4%B8%AA%E6%89%87%E5%8C%BA%E7%9A%84%E5%B9%B3%E5%9D%87%E5%BE%AA%E7%8E%AF%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9F"><span class="toc-number">6.0.0.2.4.</span> <span class="toc-text">访问某个扇区的平均循环等待时间是多少？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E9%87%87%E7%94%A8%E4%BD%8D%E7%A4%BA%E5%9B%BE%E6%96%B9%E5%BC%8F%E7%AE%A1%E7%90%86%E7%A3%81%E7%9B%98%E7%9A%84%E7%A9%BA%E9%97%B2%E6%89%87%E5%8C%BA%EF%BC%8C%E4%BD%8D%E7%A4%BA%E5%9B%BE%E9%9C%80%E8%A6%81%E5%8D%A0%E5%A4%9A%E5%B0%91%E6%89%87%E5%8C%BA%EF%BC%9F"><span class="toc-number">6.0.0.2.5.</span> <span class="toc-text">如果采用位示图方式管理磁盘的空闲扇区，位示图需要占多少扇区？</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E7%AD%94-1"><span class="toc-number">6.0.0.3.</span> <span class="toc-text">简答</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5"><span class="toc-number">7.</span> <span class="toc-text">同步</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&text=操作系统os复习"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&is_video=false&description=操作系统os复习"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=操作系统os复习&body=Check out this article: http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&title=操作系统os复习"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&name=操作系统os复习&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2024/06/os%E5%A4%8D%E4%B9%A0/&t=操作系统os复习"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    xk
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/projects/">Projects</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
