@@ -13,14 +13,14 @@
 <meta property="og:site_name" content="xk is sleeping">
 <meta property="og:description" content="面向往年卷的复习qwq  概述L5 应用层L4 运输层L3 网络层L2 链路层L1 物理层 电路交换：在发送方和接收方之间建立一条专用的端到端链接（电路），预留了端系统间沿路径通信所需的资源分组交换：将长报文划分为较小的数据块（分组），不预留资源，以最大速率独立传输，但可能排队或丢包 网络时延主要由哪几部分组成？处理时延、排队时延、传输时延、传播时延、（端到端时延） 传输时延：分组长度 L &amp;#">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240625204758273.png">
-<meta property="og:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240624222955649.png">
-<meta property="og:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240624223041041.png">
+<meta property="og:image" content="http://example.com/images/2024/cn1.png">
+<meta property="og:image" content="http://example.com/images/2024/cn2.png">
+<meta property="og:image" content="http://example.com/images/2024/cn3.png">
 <meta property="article:published_time" content="2024-06-22T07:21:30.000Z">
-<meta property="article:modified_time" content="2024-07-06T09:31:48.771Z">
+<meta property="article:modified_time" content="2024-08-03T07:57:16.302Z">
 <meta property="article:author" content="xk">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/cnos%E5%A4%8D%E4%B9%A0/image-20240625204758273.png">
+<meta name="twitter:image" content="http://example.com/images/2024/cn1.png">
     
     
       
@@ -176,7 +176,7 @@
 <p><strong>HTTP 是如何体现 TCP “全双工” 特性的？</strong><br>HTTP 是应用层协议，它建立在传输层的TCP协议之上，而TCP协议本身具有全双工通信的特性。这意味着TCP连接可以在同一时间内支持双向数据传输，即客户端和服务器可以同时发送和接收数据。HTTP允许客户端向服务器发送请求，并允许服务器返回响应。这是通过TCP连接的全双工特性来实现的。</p>
 <p><strong>HTTP方法：GET、POST、HEAD、PUT、DELETE</strong><br>GET：浏览器请求一个对象，在URL字段带有请求对象的标识<br>POST：用户向服务器请求一个与表单字段输入内容有关的Web页面，实体体中为输入值（例如用搜索引擎提供关键词）<br>HEAD：类似GET，会用HTTP报文响应，但不返回请求对象，用于调试<br>PUT：允许用户上传对象到指定的路径，用于向服务器上传对象<br>DELETE：删除web服务器上的对象</p>
 <h1 id="运输层"><a href="#运输层" class="headerlink" title="运输层"></a>运输层</h1><h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>TCP 头部</p>
-<img src="/images/cnos复习/image-20240625204758273.png" style="zoom:40%;" />
+<img src="/images/2024/cn1.png" style="zoom:40%;" />
 
 <p>ACK是等待的下一个序号 ，ACK &#x3D; Seq + Len<br>P161 eg Seq &#x3D; 92, Len &#x3D; 8, 92..99 共8字节，ACK &#x3D; 100<br>如果丢包停留在上次的ACK</p>
 <h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>客户端 –&gt; 服务器 SYN报文段，客户请求连接<br>服务器 —&gt; 客户 SYNACK报文段，服务器分配TCP缓存<br>客户 —&gt; 服务器 可以携带数据负载了</p>
@@ -205,9 +205,9 @@
 <p>检测NET后的主机数量：看端口号</p>
 <p>防火墙禁止web访问：封掉http的80端口和https的443端口</p>
 <h4 id="IPv4-IPv6"><a href="#IPv4-IPv6" class="headerlink" title="IPv4, IPv6"></a>IPv4, IPv6</h4><p>以太网帧和ipv4首部如图：</p>
-<img src="/images/cnos复习/image-20240624222955649.png" style="zoom:60%;" />
+<img src="/images/2024/cn2.png" style="zoom:60%;" />
 
-<img src="/images/cnos复习/image-20240624223041041.png" style="zoom:33%;" />
+<img src="/images/2024/cn3.png" style="zoom:33%;" />
 
 
 
